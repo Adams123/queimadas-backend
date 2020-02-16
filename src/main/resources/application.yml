@@ -1,0 +1,20 @@
+## default connection pool
+spring:
+  datasource:
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+    url: ${PG_URL}
+    username: ${PG_USER}
+    password: ${PG_PASS}
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+  h2:
+    console:
+      enabled: true
+
+server:
+  port: ${SERVER_PORT}
+  address: ${SERVER_URL}
