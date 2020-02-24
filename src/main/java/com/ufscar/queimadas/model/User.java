@@ -2,28 +2,26 @@ package com.ufscar.queimadas.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users") //cannot be user, it's a postgresql reserved word
-public class User implements UserDetails {
-
-    @Type(type="pg-uuid")
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class User extends BaseModel implements UserDetails {
 
     @Column(unique = true)
     private String name;
@@ -32,7 +30,6 @@ public class User implements UserDetails {
     private Set<Roles> roles = Collections.singleton(new Roles());
 
     public User(String name, String password) {
-        this.id = UUID.randomUUID();
         this.name = name;
         this.password = password;
     }

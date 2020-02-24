@@ -2,19 +2,22 @@
 
 spring:
   datasource:
+    initialization-mode: always
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
     url: ${PG_URL}
     username: ${PG_USER}
     password: ${PG_PASS}
-
+    data: "classpath:scripts/data.sql"
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   h2:
     console:
       enabled: true
+  mvc:
+    locale: pt_BR
 
 logging:
   level:

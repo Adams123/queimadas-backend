@@ -6,11 +6,13 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import java.util.Set;
 
 @Data
 @Entity
 public class Roles implements GrantedAuthority {
+    @Transient
     private long serialVersion = 1L;
     @Id
     private String userRole;
@@ -48,6 +50,6 @@ public class Roles implements GrantedAuthority {
     }
 
     public enum Role {
-        FIREFIGHTER, PUBLIC, SUPERADMIN;
+        FIREFIGHTER, PUBLIC, SUPERADMIN
     }
 }
