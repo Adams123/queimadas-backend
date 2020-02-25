@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
+
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.FetchType.EAGER;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -26,8 +27,12 @@ public class User extends BaseModel implements UserDetails {
     @Column(unique = true)
     private String name;
     private String password;
-    @ManyToMany
+    @ManyToMany(fetch = EAGER)
+    @EqualsAndHashCode.Exclude
     private Set<Roles> roles = Collections.singleton(new Roles());
+
+    @OneToOne(fetch = EAGER, mappedBy = "user", cascade = {REMOVE, REFRESH})
+    private UserBearerToken userBearerToken;
 
     public User(String name, String password) {
         this.name = name;
@@ -62,5 +67,10 @@ public class User extends BaseModel implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("User %s: %s", getId(), getName());
     }
 }

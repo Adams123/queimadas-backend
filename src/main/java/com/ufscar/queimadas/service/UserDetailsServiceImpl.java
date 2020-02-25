@@ -21,6 +21,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         Optional<User> user = userRepository.findByName(username);
-        return user.orElseThrow(() -> new UsernameNotFoundException("Failed to find user " + username));
+        return user.orElseThrow(() -> new UsernameNotFoundException("Failed to find user " + username)); //TODO localize
     }
 }

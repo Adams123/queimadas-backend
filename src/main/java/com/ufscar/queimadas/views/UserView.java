@@ -1,6 +1,5 @@
 package com.ufscar.queimadas.views;
 
-import com.ufscar.queimadas.model.Roles;
 import com.ufscar.queimadas.model.User;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -13,5 +12,5 @@ public interface UserView {
     UUID getId();
     String getName();
     LocalDateTime getCreationDate();
-    Set<Roles> getRoles();
+    Set<RolesView> getRoles();
 }
