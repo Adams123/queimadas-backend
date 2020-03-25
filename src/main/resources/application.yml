@@ -28,7 +28,11 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
-
+management:
+  endpoint:
+    health:
+      show-components: always
+      show-details: always
 server:
   port: ${SERVER_PORT}
   address: ${SERVER_URL:}
