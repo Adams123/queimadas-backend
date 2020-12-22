@@ -1,24 +1,24 @@
 package com.ufscar.queimadas.service;
 
-import com.ufscar.queimadas.controller.response.UserCreatedResponse;
+import com.ufscar.queimadas.controller.response.UserResponse;
 import com.ufscar.queimadas.exception.DuplicatedUserException;
 import com.ufscar.queimadas.model.User;
 import com.ufscar.queimadas.repository.UserRepository;
 import com.ufscar.queimadas.views.UserView;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.security.auth.login.FailedLoginException;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.ufscar.queimadas.utils.Constants.DUPLICATED_USER;
 import static com.ufscar.queimadas.utils.Constants.USER_NOT_FOUND;
 
 @Service
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final UserAuthenticationService userAuthenticationService;
@@ -40,21 +40,20 @@ public class UserService {
     }
 
     public User findUserByName(String name) {
-        Optional<User> user = userRepository.findByName(name);
+        Optional<User>  user = userRepository.findByName(name);
         String message = messageSource.getMessage(USER_NOT_FOUND, new Object[] {name}, Locale.getDefault());
         return user.orElseThrow(() -> new EntityNotFoundException(message));
     }
 
-    public UserCreatedResponse createUser(String name, String password) throws DuplicatedUserException, FailedLoginException {
+    public UserResponse createUser(String name, String password) throws DuplicatedUserException, FailedLoginException {
         if(userRepository.findByName(name).isPresent()) {
             String message = messageSource.getMessage(DUPLICATED_USER, null, Locale.getDefault());
             throw new DuplicatedUserException(message, name);
         }
         User user = new User(name, bCryptPasswordEncoder.encode(password));
         User createdUser = userRepository.save(user);
-        Optional<UUID> token = userAuthenticationService.login(name, password);
-        return token.map(s -> new UserCreatedResponse(createdUser.getId(), s.toString()))
-                .orElseGet(() -> new UserCreatedResponse(createdUser.getId(), UUID.randomUUID().toString()));
+        String token = userAuthenticationService.login(name, password).getToken();
+        return UserResponse.builder().token(token).userId(createdUser.getId()).build();
     }
 
     public void delete(UUID id) {

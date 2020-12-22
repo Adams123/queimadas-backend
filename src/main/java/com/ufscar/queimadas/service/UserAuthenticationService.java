@@ -1,5 +1,6 @@
 package com.ufscar.queimadas.service;
 
+import com.ufscar.queimadas.controller.response.UserResponse;
 import com.ufscar.queimadas.model.User;
 import com.ufscar.queimadas.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,12 +22,17 @@ public class UserAuthenticationService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public Optional<UUID> login(final String username, final String password) throws FailedLoginException {
+    public UserResponse login(final String username, final String password) throws FailedLoginException {
         Optional<User> user = userRepository.findByName(username);
-        if(user.isPresent() && bCryptPasswordEncoder.matches(password, user.get().getPassword()))
-            return user.map(tokenManager::createToken);
+        if(user.isPresent()){
+            if(bCryptPasswordEncoder.matches(password, user.get().getPassword())) {
+                return UserResponse.builder().token(tokenManager.createToken(user.get()).toString()).userId(user.get().getId()).build();
+            } else {
+                throw new FailedLoginException("Invalid user name and password");
+            }
+        }
         else {
-            throw new FailedLoginException();
+            throw new FailedLoginException("Username not found");
         }
     }
 

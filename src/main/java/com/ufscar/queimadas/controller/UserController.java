@@ -1,6 +1,6 @@
 package com.ufscar.queimadas.controller;
 
-import com.ufscar.queimadas.controller.response.UserCreatedResponse;
+import com.ufscar.queimadas.controller.response.UserResponse;
 import com.ufscar.queimadas.exception.DuplicatedUserException;
 import com.ufscar.queimadas.service.UserAuthenticationService;
 import com.ufscar.queimadas.service.UserService;
@@ -33,7 +33,7 @@ public class UserController {
 
     @PostMapping("/public/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserCreatedResponse> createUser(@RequestParam  String username, @RequestParam String password) throws DuplicatedUserException, FailedLoginException {
+    public ResponseEntity<UserResponse> createUser(@RequestParam  String username, @RequestParam String password) throws DuplicatedUserException, FailedLoginException {
         return ResponseEntity.ok(userService.createUser(username, password));
     }
 
@@ -52,12 +52,8 @@ public class UserController {
     }
 
     @PostMapping("/public/login")
-    public ResponseEntity<UUID> login(@RequestParam  String username, @RequestParam String password) throws DuplicatedUserException, FailedLoginException {
-        Optional<UUID> loginToken = userAuthenticationService.login(username, password);
-        if(loginToken.isPresent()) {
-            return ResponseEntity.ok(loginToken.get());
-        } else {
-            throw new DuplicatedUserException("Failed", username); //TODO fix and localize
-        }
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<UserResponse> login(@RequestParam  String username, @RequestParam String password) throws FailedLoginException {
+            return ResponseEntity.ok(userAuthenticationService.login(username, password));
     }
 }

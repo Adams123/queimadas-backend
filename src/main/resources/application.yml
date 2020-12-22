@@ -6,8 +6,8 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
-    url: ${PG_URL}
-    username: ${PG_USER}
+    url: ${PG_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${PG_USER:postgres}
     password: ${PG_PASS}
     data: "classpath:scripts/data.sql"
   jpa:
@@ -34,5 +34,5 @@ management:
       show-components: always
       show-details: always
 server:
-  port: ${SERVER_PORT}
+  port: ${SERVER_PORT:8666}
   address: ${SERVER_URL:}
