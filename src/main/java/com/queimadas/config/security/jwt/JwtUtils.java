@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtUtils {
@@ -20,8 +21,8 @@ public class JwtUtils {
     @Value("${queimadas.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${queimadas.jwtExpirationMs}")
-    private int jwtExpirationMs;
+    @Value("${queimadas.jwtExpirationDay}")
+    private int jwtExpirationDay;
 
     public String generateJwtToken(Authentication authentication) {
 
@@ -33,7 +34,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date((new Date().getTime() + TimeUnit.DAYS.toMillis(jwtExpirationDay))))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }

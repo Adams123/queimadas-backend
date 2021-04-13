@@ -39,4 +39,4 @@ server:
 
 queimadas:
   jwtSecret: "tEdaoUsyWkaC97zGDsx7vfhTsyETLHgShBpbIqZygzrVGZ3KCVrso8ZoGel9JdNsnQxRA4wBJs8X5zNPkGsmXYQbkE1jxOyxat50wWUY3iGn7Pxw439YYwx09MlRIQrLhmmrAWWYIJzvRBE7Wxg6ARYFys5arJFZyX9RDW8vNNqdziVf0SXjO60WdjK4h26Zvkj2tvQpCTxBhTMEwrCjsQXFAoc7SeEh045IrbWbiuaQ9tnZezxN7LzTBnAuhUbP"
-  jwtExpirationMs: 100000
+  jwtExpirationDay: 30

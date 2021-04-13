@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.queimadas.model.ERole.ROLE_ADMIN;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -100,12 +102,12 @@ public class AuthController {
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
-                    case "admin" -> {
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                    case "ROLE_ADMIN" -> {
+                        Role adminRole = roleRepository.findByName(ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
                         roles.add(adminRole);
                     }
-                    case "mod" -> {
+                    case "ROLE_MODERATOR" -> {
                         Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
                                 .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
                         roles.add(modRole);
