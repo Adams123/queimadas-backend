@@ -50,6 +50,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "id")
+    private Set<Location> locations;
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;

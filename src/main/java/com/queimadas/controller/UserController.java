@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class UserController {
 
-    //TODO usar spring security
+    //TODO usar spring security direito
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
