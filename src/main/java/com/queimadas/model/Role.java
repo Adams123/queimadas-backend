@@ -3,6 +3,7 @@ package com.queimadas.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user_role")
+@ToString
 public class Role {
     @Id
     @GeneratedValue(generator = "UUID")

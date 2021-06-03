@@ -1,8 +1,7 @@
 package com.queimadas.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,8 +9,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users",
@@ -20,6 +21,8 @@ import java.util.UUID;
                 @UniqueConstraint(columnNames = "email")
         })
 @Data
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -50,8 +53,18 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "id")
-    private Set<Location> locations;
+    @ManyToMany
+    @JoinTable(name = "user_location",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "location_id"))
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Location> locations = new HashSet<>();
+
+    @JsonIgnore
+    public List<UUID> getLocationIds(){
+        return this.getLocations().stream().map(Location::getId).collect(Collectors.toList());
+    }
 
     public User(String username, String email, String password) {
         this.username = username;

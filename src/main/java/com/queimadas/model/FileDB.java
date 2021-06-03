@@ -3,12 +3,14 @@ package com.queimadas.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@ToString
 @Table(name = "files")
 @Data
 @NoArgsConstructor
@@ -25,6 +27,7 @@ public class FileDB {
     private String type;
 
     @Lob
+    @ToString.Exclude
     private byte[] data;
 
     public FileDB(String name, String type, byte[] data) {

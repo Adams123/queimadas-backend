@@ -1,16 +1,18 @@
 package com.queimadas.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Data
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class Location {
@@ -29,7 +31,20 @@ public class Location {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private FileDB image;
 
-    @OneToMany(mappedBy = "id")
-    private Set<User> sentUsers;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private User user;
+
+    @JsonIgnore
+    public User getUser(){
+        return this.user;
+    }
+
+    public UUID getUser_id(){
+        return this.user.getId();
+    }
 
 }
