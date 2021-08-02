@@ -25,8 +25,10 @@ public class Location {
     )
     private UUID id;
 
-    private Long latitude;
-    private Long longitude;
+    @Column(precision = 10, scale = 5)
+    private Double latitude;
+    @Column(precision = 10, scale = 5)
+    private Double longitude;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private FileDB image;

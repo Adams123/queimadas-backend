@@ -13,21 +13,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/location")
-@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 @Slf4j
 public class LocationController {
 
@@ -44,21 +40,32 @@ public class LocationController {
     }
 
     @PostMapping(consumes = MediaType.ALL_VALUE)
-    public ResponseEntity<String> create(@RequestPart LocationDTO locationDTO, @RequestPart MultipartFile image) throws IOException {
-        FileDB fileDB = fileStorageService.store(image);
+    public ResponseEntity<String> create(
+            @RequestPart LocationDTO locationDTO,
+            @RequestPart(required = false) MultipartFile image) throws IOException {
+        FileDB fileDB = null;
+        if (image != null) {
+            fileDB = fileStorageService.store(image);
+        }
         Location location = mapper.toEntity(locationDTO, fileDB);
+        User user = userRepository.findById(UUID.fromString("0fcf0d94-0b33-4063-8708-ff4e1d7847e4")).get();
+        location.setUser(user);
         return ResponseEntity.ok(locationRepository.save(location).getId().toString());
     }
 
     @Transactional
     @GetMapping("/pendings")
-    public ResponseEntity<List<Location>> findPendings(Authentication authentication) {
-        UserDetailsImpl details = (UserDetailsImpl) authentication.getPrincipal();
-        User authenticated = userRepository.findById(details.getId()).get();
+    public ResponseEntity<Set<LocationDTO>> findPendings(@RequestParam UUID userId) {
+        User authenticated = userRepository.findById(userId).get();
         List<UUID> userLocations = authenticated.getLocationIds();
         List<UUID> locations = locationRepository.getIds();
-        Collection<UUID> missingLocations = CollectionUtils.subtract(userLocations, locations);
-        return ResponseEntity.ok(locationRepository.findAllById(missingLocations));
+        Collection<UUID> missingLocations = CollectionUtils.subtract(locations, userLocations);
+        List<Location> foundLocations = locationRepository.findAllById(missingLocations);
+        Set<LocationDTO> returnLocations = new HashSet<>();
+        for (Location foundLocation : foundLocations) {
+            returnLocations.add(mapper.toDTO(foundLocation));
+        }
+        return ResponseEntity.ok(returnLocations);
     }
 
     @PutMapping("/sent")

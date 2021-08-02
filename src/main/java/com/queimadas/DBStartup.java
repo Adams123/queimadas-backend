@@ -3,12 +3,12 @@ package com.queimadas;
 import com.queimadas.model.ERole;
 import com.queimadas.model.Role;
 import com.queimadas.repository.RoleRepository;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DBStartup implements ApplicationListener<ApplicationReadyEvent> {
+public class DBStartup implements ApplicationRunner {
 
     private final RoleRepository roleRepository;
 
@@ -17,7 +17,7 @@ public class DBStartup implements ApplicationListener<ApplicationReadyEvent> {
     }
 
     @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
+    public void run(ApplicationArguments args) {
         if (roleRepository.findAll().isEmpty()) {
             for (ERole value : ERole.values()) {
                 roleRepository.save(new Role(value));

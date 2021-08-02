@@ -1,15 +1,13 @@
 package com.queimadas.model.mapper;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class LocationDTO {
-    private Long latitude;
-    private Long longitude;
+    private Double latitude;
+    private Double longitude;
 }

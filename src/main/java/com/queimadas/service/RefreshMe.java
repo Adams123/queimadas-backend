@@ -17,10 +17,9 @@ public class RefreshMe {
         this.restTemplate = restTemplate;
     }
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "2 * * * * *")
     public void makeMyRequest(){
         final String uri = "https://queimadas-ufscar.herokuapp.com/api/test/all";
-        String response = restTemplate.getForObject(URI.create(uri), String.class);
-        log.info(response);
+        restTemplate.getForObject(URI.create(uri), String.class);
     }
 }
