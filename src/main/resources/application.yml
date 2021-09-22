@@ -1,0 +1,42 @@
+## default connection pool
+
+spring:
+  datasource:
+    initialization-mode: always
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/pg}
+    username: ${PG_USER:postgres}
+    password: ${PG_PASS}
+    #data: "classpath:scripts/data.sql"
+  jpa:
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+  web:
+    locale: pt_BR
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+management:
+  endpoint:
+    health:
+      show-components: always
+      show-details: always
+server:
+  port: ${SERVER_PORT:8666}
+  address: ${SERVER_URL:}
+
+queimadas:
+  jwtSecret: "tEdaoUsyWkaC97zGDsx7vfhTsyETLHgShBpbIqZygzrVGZ3KCVrso8ZoGel9JdNsnQxRA4wBJs8X5zNPkGsmXYQbkE1jxOyxat50wWUY3iGn7Pxw439YYwx09MlRIQrLhmmrAWWYIJzvRBE7Wxg6ARYFys5arJFZyX9RDW8vNNqdziVf0SXjO60WdjK4h26Zvkj2tvQpCTxBhTMEwrCjsQXFAoc7SeEh045IrbWbiuaQ9tnZezxN7LzTBnAuhUbP"
+  jwtExpirationDay: 30
